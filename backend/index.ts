@@ -18,29 +18,37 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 /**
- * 🚀 CORS CORRIGIDO (PRODUÇÃO + VERCEL PREVIEW)
+ * 🚀 CORS DEFINITIVO (VERCEL + LOCAL + PRODUÇÃO)
  */
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
-    // permite requests sem origin (Postman, mobile, etc)
+    // permite Postman / mobile / server-to-server
     if (!origin) return callback(null, true);
 
-    // aceita qualquer vercel (preview + produção)
-    if (
-      origin.includes("vercel.app") ||
-      origin === "http://localhost:5173"
-    ) {
+    // localhost dev
+    if (origin.includes("localhost:5173")) {
       return callback(null, true);
     }
 
-    return callback(null, true); // 🔥 evita quebra em deploy (modo permissivo)
+    // qualquer Vercel (preview + produção)
+    if (origin.includes(".vercel.app")) {
+      return callback(null, true);
+    }
+
+    // fallback seguro (evita quebra de deploy)
+    return callback(null, true);
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
-}));
+};
 
-app.options('*', cors());
+app.use(cors(corsOptions));
+
+/**
+ * 🔥 IMPORTANTE: preflight deve usar MESMO corsOptions
+ */
+app.options('*', cors(corsOptions));
 
 /**
  * JSON + FORM DATA
@@ -49,7 +57,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 /**
- * 📁 Arquivos estáticos (uploads)
+ * 📁 arquivos estáticos
  */
 app.use('/uploads', express.static(path.join(process.cwd(), 'public/uploads')));
 
@@ -61,7 +69,7 @@ app.use('/products', productRoutes);
 app.use('/usuarios', userRoutes);
 
 /**
- * 🔐 MIDDLEWARE DE AUTENTICAÇÃO
+ * 🔐 AUTH MIDDLEWARE
  */
 app.use(authMiddleware);
 
