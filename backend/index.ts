@@ -21,15 +21,25 @@ const PORT = process.env.PORT || 3000;
  * 🚀 CORS CORRIGIDO (PRODUÇÃO + VERCEL PREVIEW)
  */
 app.use(cors({
-  origin: true, // 🔥 aceita qualquer origin (resolve Vercel preview + produção)
+  origin: function (origin, callback) {
+    // permite requests sem origin (Postman, mobile, etc)
+    if (!origin) return callback(null, true);
+
+    // aceita qualquer vercel (preview + produção)
+    if (
+      origin.includes("vercel.app") ||
+      origin === "http://localhost:5173"
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(null, true); // 🔥 evita quebra em deploy (modo permissivo)
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-/**
- * 🔥 IMPORTANTE: liberar preflight (evita erros OPTIONS)
- */
 app.options('*', cors());
 
 /**
