@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Importando as fontes elegantes do Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:wght@600;700&display=swap');
+
+/* Configurando o fundo creme e as fontes padrão do site */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #FDFBF7; /* Cor de fundo idêntica ao print */
+  font-family: 'Inter', sans-serif;
+  color: #3E2723; /* Marrom escuro para os textos */
+}
+
+/* Forçando os títulos a usarem a fonte bonita serifada */
+h1, h2, h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  color: #2B1810;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
