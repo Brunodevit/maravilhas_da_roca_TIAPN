@@ -24,10 +24,30 @@ const PORT = process.env.PORT || 3000;
 /**
  * 🚀 CORS (RECOMENDADO MANTER)
  */
-app.use(cors({
-  origin: '*', // Aceita requisições de qualquer lugar
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Lista de origens fixas permitidas (como seu ambiente local)
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:5173', // Porta padrão do Vite, caso use
+      'http://localhost:8080'
+    ];
+
+    // 1. Se não houver origin (ex: Postman, ferramentas de teste), permite.
+    // 2. Se a origem terminar com '.vercel.app', permite (resolve o problema dos deploys da Vercel).
+    // 3. Se a origem estiver na lista de allowedOrigins, permite.
+    if (!origin || origin.endsWith('.vercel.app') || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bloqueado pela política de CORS'));
+    }
+  },
+  credentials: true, // OBRIGATÓRIO: Permite o envio de cookies/headers de autenticação
   optionsSuccessStatus: 200
-}));
+};
+
+// Ativa o CORS com as novas regras
+app.use(cors(corsOptions));
 /**
  * JSON + FORM DATA
  */
