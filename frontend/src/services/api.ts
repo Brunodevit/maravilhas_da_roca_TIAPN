@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-  baseURL: "https://maravilhas-da-roca.onrender.com",
+  baseURL: "https://maravilhas-da-roca-tiapn.onrender.com",
   withCredentials: true
 })
 
