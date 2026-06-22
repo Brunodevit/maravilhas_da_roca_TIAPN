@@ -25,13 +25,8 @@ const PORT = process.env.PORT || 3000;
  * 🚀 CORS (RECOMENDADO MANTER)
  */
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true);
-    if (origin.includes("vercel.app")) return callback(null, true);
-    if (origin.includes("localhost")) return callback(null, true);
-    return callback(null, true);
-  },
-  credentials: true
+  origin: 'https://maravilhas-da-roca-tiapn-kmn637d9a-brunoms-s-projects.vercel.app',
+  optionsSuccessStatus: 200
 }));
 
 /**
