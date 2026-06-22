@@ -25,10 +25,9 @@ const PORT = process.env.PORT || 3000;
  * 🚀 CORS (RECOMENDADO MANTER)
  */
 app.use(cors({
-  origin: 'https://maravilhas-da-roca-tiapn-kmn637d9a-brunoms-s-projects.vercel.app',
+  origin: '*', // Aceita requisições de qualquer lugar
   optionsSuccessStatus: 200
 }));
-
 /**
  * JSON + FORM DATA
  */
