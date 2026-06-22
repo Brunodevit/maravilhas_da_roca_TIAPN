@@ -23,7 +23,7 @@ const cadastrar = async () => {
   loading.value = true
 
   try {
-    await axios.post('http://localhost:3000/usuarios', {
+    await axios.post('https://maravilhas-da-roca-tiapn.onrender.com/usuarios', {
       nome: nome.value,
       email: email.value,
       senha: senha.value
