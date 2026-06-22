@@ -15,16 +15,24 @@ import authRoutes from './src/routes/authRoutes';
 import authMiddleware from './src/middlewares/authMiddleware';
 
 const app = express();
-const PORT = process.env.DB_PORT || 3000;
 
 /**
- * 🚀 CORS DEFINITIVO (VERCEL + LOCAL + PRODUÇÃO)
+ * 🚀 PORTA CORRETA (RENDER)
  */
+const PORT = process.env.PORT || 3000;
 
 /**
- * ❌ IMPORTANTE: NÃO usar app.options('*') no Express 5
- * Express já trata preflight automaticamente
+ * 🚀 CORS (RECOMENDADO MANTER)
  */
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (origin.includes("vercel.app")) return callback(null, true);
+    if (origin.includes("localhost")) return callback(null, true);
+    return callback(null, true);
+  },
+  credentials: true
+}));
 
 /**
  * JSON + FORM DATA
@@ -57,7 +65,7 @@ app.use('/cart', cartRoutes);
 app.use('/favoritos', favoritosRoutes);
 
 /**
- * 🚀 START SERVER (OBRIGATÓRIO 0.0.0.0 no Render)
+ * 🚀 START SERVER
  */
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
