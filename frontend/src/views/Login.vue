@@ -64,7 +64,7 @@ const entrar = async () => {
             Maravilhas da Roça
           </span>
           <h1 class="mt-6 text-6xl font-black font-serif leading-[1.05] text-[#FFF6E9]">
-            O sabor que nasce<br />da terra viv
+            O sabor que nasce<br />da terra viva
           </h1>
           <p class="mt-6 text-white/90 text-lg leading-relaxed">
             Produtos artesanais feitos com cuidado, tradição e ingredientes naturais direto da origem.
