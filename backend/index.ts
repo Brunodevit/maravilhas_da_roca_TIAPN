@@ -15,12 +15,11 @@ import authRoutes from './src/routes/authRoutes';
 import authMiddleware from './src/middlewares/authMiddleware';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.DB_PORT || 3000;
 
 /**
  * 🚀 CORS DEFINITIVO (VERCEL + LOCAL + PRODUÇÃO)
  */
-
 
 /**
  * ❌ IMPORTANTE: NÃO usar app.options('*') no Express 5
