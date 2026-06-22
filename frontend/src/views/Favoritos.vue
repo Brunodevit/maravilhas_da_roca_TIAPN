@@ -305,7 +305,7 @@ onMounted(
                   )
                 )
                   ? item.image
-                  : `http://localhost:3000/uploads/${item.image || 'default.png'}`
+                  : `https://maravilhas-da-roca-tiapn.onrender.com/uploads/${item.image || 'default.png'}`
               "
               :alt="
                 item.name

@@ -32,7 +32,7 @@ function disminuir() {
       <img 
         :src="item.imagem && (item.imagem.startsWith('http://') || item.imagem.startsWith('https://')) 
           ? item.imagem 
-          : `http://localhost:3000/uploads/${item.imagem || 'default.png'}`" 
+          : `https://maravilhas-da-roca-tiapn.onrender.com/uploads/${item.imagem || 'default.png'}`" 
         alt="Imagem do produto"
         class="w-full h-full object-cover"
       />

@@ -189,7 +189,7 @@ onMounted(async () => {
                     <img 
                       :src="item.image && (item.image.startsWith('http://') || item.image.startsWith('https://')) 
                         ? item.image 
-                        : `http://localhost:3000/uploads/${item.image || 'default.png'}`" 
+                        : `https://maravilhas-da-roca-tiapn.onrender.com/uploads/${item.image || 'default.png'}`" 
                       alt="Imagem do produto"
                       class="w-10 h-10 object-cover rounded"
                     />

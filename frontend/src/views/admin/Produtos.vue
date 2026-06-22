@@ -139,7 +139,7 @@
                   <td class="px-6 py-4">
                     <div class="w-10 h-10 rounded-lg bg-[#FDFBF7] border border-[#E5DCCB] overflow-hidden flex items-center justify-center">
                       <img 
-                        :src="produto.image ? `http://localhost:3000/uploads/${produto.image}` : 'https://placehold.co/100x100'"
+                        :src="produto.image ? `https://maravilhas-da-roca-tiapn.onrender.com/uploads/${produto.image}` : 'https://placehold.co/100x100'"
                         class="w-full h-full object-cover"
                       />
                     </div>
