@@ -19,7 +19,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-  origin: 'http://localhost:5173', // 🛡️ URL exata do seu frontend no Vite
+  origin: 'https://maravilhas-da-roca-tiapn.vercel.app', // 🛡️ URL exata do seu frontend no Vite
   credentials: true,                // 🛡️ Permite o envio de cookies e tokens em requests com credentials
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
