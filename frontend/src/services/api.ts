@@ -5,7 +5,7 @@ const api = axios.create({
   withCredentials: true
 })
 
-// INTERCEPTOR DE ENVIAR O TOKEN (Você já tinha feito, tá perfeito!)
+// INTERCEPTOR DE ENVIAR O TOKEN
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token")
 
@@ -16,26 +16,29 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// NOVO: INTERCEPTOR DE RESPOSTA (Captura o token expirado)
+// INTERCEPTOR DE RESPOSTA (Captura o token expirado)
 api.interceptors.response.use(
   (response) => {
     // Se a requisição deu certo, apenas passa a resposta adiante
     return response
   },
   (error) => {
-    // Se o erro for 401 (Não autorizado / Token Expirado)
-    if (error.response && error.response.status === 401) {
+    const urlDaRequisicao = error.config?.url || ''
+    const ehRotaDeLogin = urlDaRequisicao.includes('/auth/login')
+
+    // 🔑 CORREÇÃO: Só desloga se for 401 E NÃO for a rota de login
+    if (error.response && error.response.status === 401 && !ehRotaDeLogin) {
       console.warn("Token expirado ou inválido. Deslogando usuário...")
       
       // 1. Limpa o token velho do navegador
       localStorage.removeItem("token")
+      localStorage.removeItem("user_role")
       
       // 2. Redireciona o usuário para a tela de login
-      // (Usamos o window.location puro aqui porque este arquivo está fora do ecossistema do Vue Router)
       window.location.href = "/login"
     }
 
-    // Retorna o erro para caso algum componente ainda queira tratar no catch
+    // Retorna o erro para o bloco catch do componente poder ler
     return Promise.reject(error)
   }
 )

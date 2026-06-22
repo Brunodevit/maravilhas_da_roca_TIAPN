@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import api from "../services/api";
+import api from "../services/api"; // Certifique-se de que o caminho da pasta está correto
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -32,7 +32,16 @@ const entrar = async () => {
       router.push("/");
     }
   } catch (err: any) {
-    error.value = err?.response?.data?.message || "Erro ao fazer login";
+    const data = err?.response?.data;
+
+    // 🔑 CORREÇÃO: Trata tanto erros do Zod (Array) quanto mensagens diretas da API
+    if (data?.errors && Array.isArray(data.errors)) {
+      error.value = data.errors[0]?.message || "Dados inválidos";
+    } else if (data?.message) {
+      error.value = data.message;
+    } else {
+      error.value = "Erro ao conectar com o servidor";
+    }
   } finally {
     loading.value = false;
   }
@@ -75,7 +84,7 @@ const entrar = async () => {
             <p class="text-sm text-[#6B4B36] mt-2">
               Entre para acessar sua experiência da roça
             </p>
-            <p v-if="error" class="mt-4 text-red-600 text-sm">
+            <p v-if="error" class="mt-4 text-red-600 text-sm font-semibold">
               {{ error }}
             </p>
           </div>
