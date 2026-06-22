@@ -20,28 +20,7 @@ const PORT = process.env.PORT || 3000;
 /**
  * 🚀 CORS DEFINITIVO (VERCEL + LOCAL + PRODUÇÃO)
  */
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);
 
-    if (
-      origin.includes("localhost") ||
-      origin.includes(".vercel.app")
-    ) {
-      return callback(null, true);
-    }
-
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-};
-
-/**
- * 🔥 CORS (ÚNICO E CORRETO)
- */
-app.use(cors(corsOptions));
 
 /**
  * ❌ IMPORTANTE: NÃO usar app.options('*') no Express 5
