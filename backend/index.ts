@@ -22,20 +22,15 @@ const PORT = process.env.PORT || 3000;
  */
 const corsOptions = {
   origin: function (origin, callback) {
-    // permite Postman / mobile / server-to-server
     if (!origin) return callback(null, true);
 
-    // localhost dev
-    if (origin.includes("localhost:5173")) {
+    if (
+      origin.includes("localhost") ||
+      origin.includes(".vercel.app")
+    ) {
       return callback(null, true);
     }
 
-    // qualquer Vercel (preview + produção)
-    if (origin.includes(".vercel.app")) {
-      return callback(null, true);
-    }
-
-    // fallback seguro (evita quebra de deploy)
     return callback(null, true);
   },
   credentials: true,
@@ -43,12 +38,15 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
+/**
+ * 🔥 CORS (ÚNICO E CORRETO)
+ */
 app.use(cors(corsOptions));
 
 /**
- * 🔥 IMPORTANTE: preflight deve usar MESMO corsOptions
+ * ❌ IMPORTANTE: NÃO usar app.options('*') no Express 5
+ * Express já trata preflight automaticamente
  */
-app.options('*', cors(corsOptions));
 
 /**
  * JSON + FORM DATA
@@ -81,8 +79,8 @@ app.use('/cart', cartRoutes);
 app.use('/favoritos', favoritosRoutes);
 
 /**
- * 🚀 START SERVER
+ * 🚀 START SERVER (OBRIGATÓRIO 0.0.0.0 no Render)
  */
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
