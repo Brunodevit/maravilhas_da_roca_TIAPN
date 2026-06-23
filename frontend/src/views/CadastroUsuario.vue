@@ -15,8 +15,16 @@ const error = ref('')
 const cadastrar = async () => {
   error.value = ''
 
+  // 1. Verifica se as senhas coincidem
   if (senha.value !== confirmarSenha.value) {
     error.value = 'As senhas não coincidem'
+    return
+  }
+
+  // 2. Verifica a força da senha antes de chamar a API
+  const senhaForteRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+  if (!senhaForteRegex.test(senha.value)) {
+    error.value = 'Sua senha é fraca. Use pelo menos 8 caracteres, incluindo maiúsculas, minúsculas, números e símbolos.'
     return
   }
 
@@ -32,9 +40,14 @@ const cadastrar = async () => {
     router.push('/login')
 
   } catch (err: any) {
-    error.value =
-      err?.response?.data?.message ||
-      'Erro ao criar conta'
+    const data = err?.response?.data;
+    if (data?.errors && Array.isArray(data.errors)) {
+      error.value = data.errors[0]?.message || "Dados inválidos";
+    } else if (data?.message) {
+      error.value = data.message;
+    } else {
+      error.value = "Erro ao criar conta";
+    }
   } finally {
     loading.value = false
   }
@@ -56,7 +69,7 @@ const cadastrar = async () => {
           Crie sua conta
         </h1>
 
-        <p v-if="error" class="mt-4 text-red-600 text-sm">
+        <p v-if="error" class="mt-4 text-red-600 font-semibold text-sm">
           {{ error }}
         </p>
 
@@ -97,7 +110,7 @@ const cadastrar = async () => {
       <button
         @click="cadastrar"
         :disabled="loading"
-        class="mt-10 w-full py-5 rounded-2xl font-bold bg-[#2E1F16] hover:bg-[#C49A55] text-white transition"
+        class="mt-10 w-full py-5 rounded-2xl font-bold bg-[#2E1F16] hover:bg-[#C49A55] text-white transition disabled:opacity-50"
       >
         {{ loading ? 'Criando sua conta...' : 'CRIAR CONTA' }}
       </button>

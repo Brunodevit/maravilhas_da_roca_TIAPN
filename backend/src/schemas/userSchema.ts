@@ -1,5 +1,9 @@
 import { z } from 'zod'
 
+// Regex para: min 8 caracteres, 1 maiúscula, 1 minúscula, 1 número, 1 caractere especial
+const senhaForteRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/
+const mensagemSenhaFraca = 'A senha deve ter no mínimo 8 caracteres, incluindo uma letra maiúscula, uma minúscula, um número e um caractere especial.'
+
 // ===============================
 // CREATE USER
 // ===============================
@@ -14,7 +18,7 @@ export const createUserSchema = z.object({
 
   senha: z
     .string()
-    .min(6, 'Senha deve ter no mínimo 6 caracteres')
+    .regex(senhaForteRegex, mensagemSenhaFraca)
 })
 
 // ===============================
@@ -33,7 +37,7 @@ export const updateUserSchema = z.object({
 
   senha: z
     .string()
-    .min(6, 'Senha deve ter no mínimo 6 caracteres')
+    .regex(senhaForteRegex, mensagemSenhaFraca)
     .optional()
 })
 
@@ -47,5 +51,5 @@ export const loginUserSchema = z.object({
 
   senha: z
     .string()
-    .min(6, 'Senha deve ter no mínimo 6 caracteres')
+    .min(1, 'Senha é obrigatória') // não bloquear usuários antigos
 })
