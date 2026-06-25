@@ -185,9 +185,13 @@ export const useShopStore = defineStore("shop", {
 
       try {
         await updateCartItem(productId, quantity);
-      } catch (error) {
+      } catch (error: any) {
+        // 🔥 A MÁGICA ACONTECE AQUI: Pegamos a mensagem do backend e mostramos na tela!
+        const mensagemDoServidor = error.response?.data?.message || "Não foi possível alterar a quantidade.";
+        alert(`Aviso: ${mensagemDoServidor}`);
+        
         console.error("Erro ao atualizar quantidade no servidor, revertendo...", error);
-        await this.loadCart(); 
+        await this.loadCart(); // Desfaz a animação do botão e volta para a quantidade real que tem no banco
       }
     },
 

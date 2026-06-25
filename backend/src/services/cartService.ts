@@ -6,6 +6,15 @@ export const addItemService = async (
   productId: number,
   quantity: number
 ) => {
+  // 🔥 VALIDAÇÃO: Busca o estoque real do produto
+  const [produtoDb]: any = await db.query(
+    'SELECT ProEstoque FROM Produto WHERE ProCodigo = ?',
+    [productId]
+  );
+  
+  if (!produtoDb.length) throw new Error('Produto não encontrado');
+  const estoqueDisponivel = produtoDb[0].ProEstoque;
+
   const [cart]: any = await db.query(
     'SELECT * FROM Carrinho WHERE UsuCodigo = ?',
     [userId]
@@ -18,7 +27,6 @@ export const addItemService = async (
       'INSERT INTO Carrinho (UsuCodigo) VALUES (?)',
       [userId]
     )
-
     cartId = result.insertId
   } else {
     cartId = cart[0].CarCodigo
@@ -30,13 +38,26 @@ export const addItemService = async (
   )
 
   if (item.length) {
+    const quantidadeAtual = item[0].Quantidade;
+    const novaQuantidade = quantidadeAtual + quantity;
+
+    // 🔥 TRAVA: Bloqueia se a soma ultrapassar o estoque
+    if (novaQuantidade > estoqueDisponivel) {
+      throw new Error(`Estoque insuficiente. Você só pode adicionar mais ${estoqueDisponivel - quantidadeAtual} unidade(s).`);
+    }
+
     await db.query(
       `UPDATE CarrinhoItem 
-       SET Quantidade = Quantidade + ?
+       SET Quantidade = ?
        WHERE CarCodigo = ? AND ProCodigo = ?`,
-      [quantity, cartId, productId]
+      [novaQuantidade, cartId, productId]
     )
   } else {
+    // 🔥 TRAVA: Bloqueia se o item novo passar do estoque
+    if (quantity > estoqueDisponivel) {
+      throw new Error(`Estoque insuficiente. Limite máximo: ${estoqueDisponivel} unidade(s).`);
+    }
+
     await db.query(
       `INSERT INTO CarrinhoItem (CarCodigo, ProCodigo, Quantidade)
        VALUES (?, ?, ?)`,
@@ -81,18 +102,30 @@ export const getCartService = async (userId: number) => {
   return { items, total }
 }
 
-// 🔁 atualizar item
+// 🔁 atualizar item (direto na página do carrinho)
 export const updateItemService = async (
   userId: number,
   productId: number,
   quantity: number
 ) => {
+  // 🔥 VALIDAÇÃO: Checa o estoque antes de atualizar a quantidade
+  const [produtoDb]: any = await db.query(
+    'SELECT ProEstoque FROM Produto WHERE ProCodigo = ?',
+    [productId]
+  );
+  if (!produtoDb.length) throw new Error('Produto não encontrado');
+  
+  const estoqueDisponivel = produtoDb[0].ProEstoque;
+  if (quantity > estoqueDisponivel) {
+    throw new Error(`Estoque insuficiente. Temos apenas ${estoqueDisponivel} unidade(s) em estoque.`);
+  }
+
   const [cart]: any = await db.query(
     'SELECT * FROM Carrinho WHERE UsuCodigo = ?',
     [userId]
   )
 
-  if (!cart.length) return { message: 'Carrinho não encontrado' }
+  if (!cart.length) throw new Error('Carrinho não encontrado');
 
   await db.query(
     `UPDATE CarrinhoItem 

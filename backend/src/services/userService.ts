@@ -54,18 +54,22 @@ const createUser = async (
   email: string,
   senha: string
 ) => {
+  console.log(`\n🆕 [RAIO-X CRIAR CONTA] Tentando criar usuário: Nome='${nome}', Email='${email}'`)
+  
   const [existingUsers]: any = await pool.execute(
     'SELECT UsuCodigo FROM Usuario WHERE UsuEmail = ?',
     [email]
   )
 
   if (existingUsers.length > 0) {
+    console.log(`⚠️ [RAIO-X CRIAR CONTA] Erro: O email '${email}' já existe no banco!`)
     const error: any = new Error('Email já existe')
     error.code = 'EMAIL_EXISTS'
     throw error
   }
 
   const hashedPassword = await bcrypt.hash(senha, 10)
+  console.log(`⚙️ [RAIO-X CRIAR CONTA] Senha criptografada com sucesso. Salvando no banco...`)
 
   const [result]: any = await pool.execute(
     `INSERT INTO Usuario
@@ -74,6 +78,8 @@ const createUser = async (
     [nome, email, hashedPassword]
   )
 
+  console.log(`✅ [RAIO-X CRIAR CONTA] SUCESSO! Conta salva de verdade com ID: ${result.insertId}`)
+  
   return result.insertId
 }
 
@@ -113,6 +119,8 @@ const loginUser = async (
   email: string,
   senha: string
 ) => {
+  console.log(`\n🕵️‍♂️ [RAIO-X LOGIN] Tentando logar: Email='${email}', Senha='${senha}'`)
+
   const [rows]: any = await pool.execute(
     `SELECT
       UsuCodigo,
@@ -126,12 +134,14 @@ const loginUser = async (
   )
 
   if (rows.length === 0) {
+    console.log(`❌ [RAIO-X LOGIN] Erro: Nenhum usuário encontrado com o email '${email}'!`)
     const error: any = new Error('Email ou senha incorretos')
     error.code = 'INVALID_CREDENTIALS'
     throw error
   }
 
   const user = rows[0]
+  console.log(`✅ [RAIO-X LOGIN] Usuário encontrado: ${user.UsuNome}. Comparando senhas...`)
 
   const isMatch = await bcrypt.compare(
     senha,
@@ -139,10 +149,13 @@ const loginUser = async (
   )
 
   if (!isMatch) {
+    console.log(`❌ [RAIO-X LOGIN] Erro: A senha digitada não bate com a senha do banco!`)
     const error: any = new Error('Email ou senha incorretos')
     error.code = 'INVALID_CREDENTIALS'
     throw error
   }
+
+  console.log(`🎉 [RAIO-X LOGIN] Sucesso! Senha correta para ${user.UsuNome}.`)
 
   return {
     id: user.UsuCodigo,

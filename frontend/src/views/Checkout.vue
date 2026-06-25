@@ -84,13 +84,15 @@ const finalizarCompra = async () => {
     // 3. LIMPAR CARRINHO E REDIRECIONAR
     // ==========================================
     shop.cartItems = []; // Esvazia o carrinho visualmente
-    
-    // Sugestão: Em vez de voltar pro catálogo, já manda ele ver os pedidos dele!
     router.push('/meus-pedidos'); 
 
   } catch (error) {
+    // 🔥 A MÁGICA ACONTECE AQUI: Pegamos a mensagem exata do leão de chácara!
     console.error("Erro ao processar:", error);
-    alert("Ocorreu um erro ao processar seu pedido.");
+    const mensagemDoServidor = error.response?.data?.message || "Ocorreu um erro de comunicação com o servidor.";
+    
+    // Mostra na tela o motivo exato de ter sido barrado (ex: "Estoque insuficiente")
+    alert(`❌ Não foi possível finalizar o pedido:\n\n${mensagemDoServidor}`);
   } finally {
     isProcessing.value = false;
   }

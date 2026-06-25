@@ -8,12 +8,32 @@ import CartItem from "./CartItem.vue";
 const shop = useShopStore();
 const router = useRouter(); // 🔥 INICIAR O ROUTER
 
-// 🔥 FUNÇÃO PARA REDIRECIONAR
-function irParaCheckout() {
-  // Redireciona para a rota de finalização (ajuste o nome se precisar)
+// 🔥 FUNÇÃO PARA REDIRECIONAR (BLINDADA)
+async function irParaCheckout() {
+  // 1. Se a vitrine estiver vazia (ex: deu F5 no carrinho), força o carregamento!
+  if (shop.products.length === 0) {
+    await shop.loadProducts();
+  }
+
+  // 2. Varre o carrinho
+  for (const item of shop.cartItems) {
+    
+    // Procura o produto original garantindo que os IDs são números
+    const produtoOriginal = shop.products.find(p => Number(p.id) === Number(item.id));
+    
+    // 3. Verifica o limite de estoque
+    if (produtoOriginal && Number(item.quantidade) > Number(produtoOriginal.stock)) {
+      alert(`Ops! Você tem ${item.quantidade}x do produto "${item.nome}", mas só temos ${produtoOriginal.stock} no estoque. Por favor, reduza a quantidade para prosseguir.`);
+      
+      // 🔄 Extra: Já força o carrinho a voltar pra quantidade certa!
+      await shop.loadCart();
+      return; // ⛔ A PORTA TRANCADA DE VEZ!
+    }
+  }
+
+  // Caminho livre!
   router.push('/checkout'); 
 }
-
 onMounted(() => {
   shop.loadCart();
 });

@@ -6,20 +6,18 @@ import {
   removeItemService
 } from '../services/cartService'
 
-
 // ➕ adicionar item
 export const addToCart = async (req: Request, res: Response) => {
   try {
-
     const userId = req.user.id
     const { product_id, quantity } = req.body
 
     const result = await addItemService(userId, product_id, quantity)
 
     return res.status(200).json(result)
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Erro ao adicionar item no carrinho',
+  } catch (error: any) {
+    return res.status(400).json({
+      message: error.message || 'Erro ao adicionar item no carrinho',
       error
     })
   }
@@ -33,9 +31,9 @@ export const getCart = async (req: Request, res: Response) => {
     const result = await getCartService(userId)
 
     return res.status(200).json(result)
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({
-      message: 'Erro ao buscar carrinho',
+      message: error.message || 'Erro ao buscar carrinho',
       error
     })
   }
@@ -50,9 +48,9 @@ export const updateCartItem = async (req: Request, res: Response) => {
     const result = await updateItemService(userId, product_id, quantity)
 
     return res.status(200).json(result)
-  } catch (error) {
-    return res.status(500).json({
-      message: 'Erro ao atualizar item do carrinho',
+  } catch (error: any) {
+    return res.status(400).json({
+      message: error.message || 'Erro ao atualizar item do carrinho',
       error
     })
   }
@@ -70,9 +68,9 @@ export const removeItemFromCart = async (req: Request, res: Response) => {
     const result = await removeItemService(userId, product_id);
 
     return res.status(200).json(result);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({
-      message: 'Erro ao remover item do carrinho',
+      message: error.message || 'Erro ao remover item do carrinho',
       error
     });
   }

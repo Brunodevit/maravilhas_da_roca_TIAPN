@@ -23,23 +23,34 @@ const product = computed(() => {
 const addProductToCart = async () => {
   if (!product.value) return;
 
-  // 📝 Imprime no console do navegador para checar as propriedades reais do objeto
-  console.log("Dados do Produto clicado:", product.value);
-
-  // Busca de forma flexível por qualquer variação do campo estoque vinda do banco
   const p = product.value as any;
   const estoqueVindo = p.ProEstoque !== undefined ? p.ProEstoque : (p.stock !== undefined ? p.stock : p.estoque);
 
-  // Se o campo de estoque realmente veio definido do banco de dados E for menor ou igual a zero, barramos.
+  // 1. Barreira se o produto já estiver zerado na loja
   if (estoqueVindo !== undefined && estoqueVindo <= 0) {
-    alert(`Lamento! O produto "${product.value.name}" está sem estoque no momento. 🌾`);
+    alert(`Lamento! O produto "${product.value.name}" está esgotado no momento. 🌾`);
+    return;
+  }
+
+  // 🔥 2. NOVA BARREIRA: Checar se o que já tem no carrinho + 1 passa do limite
+  const itemNoCarrinho = shop.cartItems.find(i => Number(i.id) === Number(p.id || p.ProCodigo));
+  const quantidadeJaNoCarrinho = itemNoCarrinho ? itemNoCarrinho.quantidade : 0;
+
+  if (quantidadeJaNoCarrinho + 1 > estoqueVindo) {
+    alert(`Ops! Temos apenas ${estoqueVindo} unidade(s) de "${product.value.name}" em estoque e ela(s) já está(ão) na sua cesta! 🧺`);
     return;
   }
 
   try {
     await addToCart(Number(product.value?.id), 1);
     shop.addCart(1);
-  } catch (error) {
+    // Atualizamos o carrinho silenciosamente para o Pinia saber a nova quantidade
+    await shop.loadCart(); 
+    alert(`"${product.value.name}" foi adicionado à sua cesta! 🧺`);
+  } catch (error: any) {
+    // 🔥 TRAVA VISUAL DO BACKEND
+    const mensagemDoServidor = error.response?.data?.message || "Não foi possível adicionar o item.";
+    alert(`Não foi possível adicionar: ${mensagemDoServidor}`);
     console.error("Erro ao adicionar ao carrinho:", error);
   }
 };

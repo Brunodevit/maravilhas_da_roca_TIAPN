@@ -25,25 +25,25 @@ const cadastrar = async () => {
   const senhaForteRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
   if (!senhaForteRegex.test(senha.value)) {
     error.value = 'Sua senha é fraca. Use pelo menos 8 caracteres, incluindo maiúsculas, minúsculas, números e símbolos.'
-    return
+        return
   }
 
   loading.value = true
 
-  try {
-    await axios.post('https://maravilhas-da-roca-tiapn.onrender.com/usuarios', {
-      nome: nome.value,
-      email: email.value,
-      senha: senha.value
-    })
+try {
+  await axios.post('https://maravilhas-da-roca-tiapn.onrender.com/usuarios', {
+    nome: nome.value,
+    email: email.value,
+    senha: senha.value
+  })
 
-    router.push('/login')
+  router.push('/login')
 
-  } catch (err: any) {
+} catch (err: any) {
     const data = err?.response?.data;
     if (data?.errors && Array.isArray(data.errors)) {
       error.value = data.errors[0]?.message || "Dados inválidos";
-    } else if (data?.message) {
+       } else if (data?.message) {
       error.value = data.message;
     } else {
       error.value = "Erro ao criar conta";

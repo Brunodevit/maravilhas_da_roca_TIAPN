@@ -12,9 +12,12 @@ export const createOrder = async (req: Request, res: Response) => {
     const novoPedido = await createOrderService(userId, tipo, total, itens, nome, telefoneCliente);
 
     return res.status(201).json({ message: 'Pedido criado com sucesso', pedido: novoPedido });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao criar pedido:", error);
-    return res.status(500).json({ message: 'Erro ao criar pedido', error });
+    return res.status(400).json({ 
+      message: error.message || 'Erro ao criar pedido', 
+      error 
+    });
   }
 };
 
@@ -24,9 +27,9 @@ export const getUserOrders = async (req: Request, res: Response) => {
     const pedidos = await getUserOrdersService(userId);
     
     return res.status(200).json(pedidos);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao buscar pedidos:", error);
-    return res.status(500).json({ message: 'Erro ao buscar pedidos', error });
+    return res.status(500).json({ message: error.message || 'Erro ao buscar pedidos', error });
   }
 };
 
@@ -35,9 +38,9 @@ export const getAllOrders = async (req: Request, res: Response) => {
   try {
     const pedidos = await getAllOrdersService();
     return res.status(200).json(pedidos);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao buscar todos os pedidos:", error);
-    return res.status(500).json({ message: 'Erro ao buscar pedidos do sistema', error });
+    return res.status(500).json({ message: error.message || 'Erro ao buscar pedidos do sistema', error });
   }
 };
 
@@ -53,8 +56,8 @@ export const updateOrderStatus = async (req: Request, res: Response) => {
 
     const pedidoAtualizado = await updateOrderStatusService(Number(id), status);
     return res.status(200).json({ message: 'Status atualizado com sucesso', pedido: pedidoAtualizado });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Erro ao atualizar status do pedido:", error);
-    return res.status(500).json({ message: 'Erro ao atualizar status', error });
+    return res.status(500).json({ message: error.message || 'Erro ao atualizar status', error });
   }
 };
