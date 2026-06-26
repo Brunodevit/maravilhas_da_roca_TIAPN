@@ -111,28 +111,26 @@ onMounted(() => {
       </p>
     </section>
 
-    <section
-      class="w-full max-w-7xl mx-auto px-2 sm:px-4 mb-8 sm:mb-12 select-none"
-    >
+    <section class="w-full max-w-7xl mx-auto px-4 mb-8 sm:mb-12 select-none">
       <div
-        class="flex flex-wrap sm:flex-nowrap items-center justify-center gap-2 sm:gap-3 overflow-visible sm:overflow-x-auto py-2 scrollbar-none"
+        class="flex items-center sm:justify-center gap-2 sm:gap-3 overflow-x-auto sm:overflow-visible whitespace-nowrap sm:flex-wrap py-2 scrollbar-none"
       >
         <button
           v-for="category in categories"
           :key="category"
           @click="shop.selectedCategory = category"
-          class="snap-center shrink-0 px-5 sm:px-6 py-2 rounded-full text-[11px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] transition-all duration-300 ease-out active:scale-95"
+          class="flex-shrink-0 px-4 sm:px-6 py-2 rounded-full text-[11px] sm:text-xs uppercase tracking-[0.12em] sm:tracking-[0.2em] transition-all duration-300 active:scale-95"
           :class="[
             shop.selectedCategory === category
-              ? 'bg-[#362212] text-[#FAF6EE] shadow-sm font-bold scale-100'
-              : 'text-[#7A5C43]/70 bg-transparent font-semibold hover:text-[#362212] hover:bg-[#EED9C4]/20',
+              ? 'bg-[#362212] text-[#FAF6EE] shadow-sm font-bold'
+              : 'text-[#7A5C43]/70 hover:text-[#362212] hover:bg-[#EED9C4]/20',
           ]"
         >
           {{ category }}
         </button>
       </div>
 
-      <div class="w-12 h-[1px] bg-[#A0522D]/20 mx-auto mt-4 sm:mt-6"></div>
+      <div class="w-12 h-px bg-[#A0522D]/20 mx-auto mt-4 sm:mt-6"></div>
     </section>
 
     <main class="max-w-7xl mx-auto px-2 sm:px-4 pb-20">
