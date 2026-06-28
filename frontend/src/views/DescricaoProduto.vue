@@ -117,6 +117,28 @@ onMounted(() => {
             <span class="text-sm text-[#7A5C43] font-medium uppercase tracking-tighter">unidade artesanal</span>
           </div>
 
+          <!-- Badge de estoque -->
+          <div>
+            <span
+              v-if="product.stock !== undefined && product.stock <= 0"
+              class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-red-600 bg-red-50 border border-red-200 px-4 py-2 rounded-full"
+            >
+              ⚠ Produto esgotado no momento
+            </span>
+            <span
+              v-else-if="product.stock !== undefined && product.stock <= 5"
+              class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#A0522D] bg-[#EED9C4]/60 border border-[#D9B48F]/50 px-4 py-2 rounded-full"
+            >
+              🌾 Restam apenas {{ product.stock }} unidades
+            </span>
+            <span
+              v-else-if="product.stock !== undefined"
+              class="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#4A7C3F] bg-[#EAF2E8]/60 border border-[#B5D5AE]/50 px-4 py-2 rounded-full"
+            >
+              ✓ {{ product.stock }} unidades disponíveis
+            </span>
+          </div>
+
           <!-- Ações -->
           <div class="flex flex-col sm:flex-row gap-4 pt-6">
             <button 
