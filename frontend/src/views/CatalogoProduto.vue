@@ -232,6 +232,28 @@ onMounted(() => {
               {{ product.description }}
             </p>
 
+            <!-- Badge de estoque -->
+            <div class="mt-1 sm:mt-2">
+              <span
+                v-if="product.stock !== undefined && product.stock <= 0"
+                class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-bold uppercase tracking-widest text-red-600 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full"
+              >
+                ⚠ Esgotado
+              </span>
+              <span
+                v-else-if="product.stock !== undefined && product.stock <= 5"
+                class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-bold uppercase tracking-widest text-[#A0522D] bg-[#EED9C4]/60 border border-[#D9B48F]/50 px-2 py-0.5 rounded-full"
+              >
+                🌾 Últimas {{ product.stock }} unidades
+              </span>
+              <span
+                v-else-if="product.stock !== undefined"
+                class="inline-flex items-center gap-1 text-[9px] sm:text-[11px] font-bold uppercase tracking-widest text-[#4A7C3F] bg-[#EAF2E8]/60 border border-[#B5D5AE]/50 px-2 py-0.5 rounded-full"
+              >
+                ✓ {{ product.stock }} em estoque
+              </span>
+            </div>
+
             <div
               class="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-2 sm:mt-4 gap-1 sm:gap-0"
             >
