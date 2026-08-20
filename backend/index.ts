@@ -60,14 +60,14 @@ app.post('/api/webhook', (req, res) => {
 
   console.log('Status do ClickUp:', statusClickUp);
 
-  // console.log('Body recebido:', req.body);
-  // console.log('Query recebida:', req.query);
-  // console.log('Params recebidos:', req.params);
+  console.log('Body recebido:', req.body);
+  console.log('Query recebida:', req.query);
+  console.log('Params recebidos:', req.params);
 
-  // res.status(200).json({
-  //   query: req.query,
-  //   params: req.params
-  // });
+  res.status(200).json({
+    query: req.query,
+    params: req.params
+  });
 
 })
 /**
