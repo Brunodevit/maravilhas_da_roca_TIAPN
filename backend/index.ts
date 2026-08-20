@@ -56,18 +56,18 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/webhook', (req, res) => {
 
-  const statusClickUp = req.body?.payload?.status?.status;
+  const personalizados = req.body?.payload?.fields;
 
-  console.log('Status do ClickUp:', statusClickUp);
+  console.log('Status do ClickUp:', personalizados);
 
-  console.log('Body recebido:', req.body);
-  console.log('Query recebida:', req.query);
-  console.log('Params recebidos:', req.params);
+  // console.log('Body recebido:', req.body);
+  // console.log('Query recebida:', req.query);
+  // console.log('Params recebidos:', req.params);
 
-  res.status(200).json({
-    query: req.query,
-    params: req.params
-  });
+  // res.status(200).json({
+  //   query: req.query,
+  //   params: req.params
+  // });
 
 })
 /**
