@@ -54,6 +54,18 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.post('/api/webhook', (req, res) => {
+
+  console.log('Body recebido:', req.body);
+  console.log('Query recebida:', req.query);
+  console.log('Params recebidos:', req.params);
+
+  res.status(200).json({
+    query: req.query,
+    params: req.params
+  });
+
+})
 /**
  * 📁 arquivos estáticos
  */
@@ -62,6 +74,7 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'public/uploads')));
 /**
  * 🔓 ROTAS PÚBLICAS
  */
+
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/usuarios', userRoutes);
@@ -77,18 +90,7 @@ app.use(authMiddleware);
 app.use('/pedidos', orderRoutes);
 app.use('/cart', cartRoutes);
 app.use('/favoritos', favoritosRoutes);
-app.post('/api/webhook', (req, res) => {
 
-  console.log('Body recebido:', req.body);
-  console.log('Query recebida:', req.query);
-  console.log('Params recebidos:', req.params);
-
-  res.status(200).json({
-    query: req.query,
-    params: req.params
-  });
-
-})
 
 /**
  * 🚀 START SERVER
